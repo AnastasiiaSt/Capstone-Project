@@ -1,6 +1,10 @@
 import pandas as pd
 from pandas_profiling import ProfileReport
 
+from plotnine import (
+    ggplot, aes, geom_point, geom_smooth, labs, theme_xkcd
+)
+
 
 # Read the datasets from the files
 
@@ -19,6 +23,10 @@ train_X = train_set.drop(['Cover_Type'], axis = 1)
 test_X = test_set
 
 # Perform EDA using pandas profiling library
+
+report_train = ProfileReport(train_set)
+
+report_train.to_file(r'C:\Users\anast\Documents\GitHub\Capstone-Project\capstone_project\profile_report_train.html')
 
 
 
