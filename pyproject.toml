@@ -13,11 +13,16 @@ pandas = "^1.4.2"
 pandas-profiling = "^3.2.0"
 click = "^8.1.3"
 pathlib = "^1.0.1"
+joblib = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 black = "^22.3.0"
 mypy = "^0.950"
+
+[tool.poetry.scripts]
+train = "capstone_project.train:train"
+well = "capstone_project.training:check"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
