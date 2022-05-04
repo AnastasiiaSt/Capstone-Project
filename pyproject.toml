@@ -22,7 +22,6 @@ mypy = "^0.950"
 
 [tool.poetry.scripts]
 train = "capstone_project.train:train"
-well = "capstone_project.training:check"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

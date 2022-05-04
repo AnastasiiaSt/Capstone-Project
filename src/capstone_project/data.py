@@ -1,13 +1,13 @@
 import pandas as pd
 from pandas_profiling import ProfileReport
 import os
+from pathlib import Path
 
 # Read the datasets from the files
 
 path = r'C:\Users\anast\Documents\GitHub\Capstone-Project\data'
 
 def get_data(path):
-    print('runnnnn')
     file_name_train = 'train.csv'
     file_name_test = 'test.csv'
     file_train = os.path.join(path, file_name_train)
@@ -25,7 +25,7 @@ def get_data(path):
     test_X = test_set
     return train_X, train_y, test_X
 
-get_data(path = path)
+get_data(path)
 
 # Perform EDA using pandas profiling library
 
