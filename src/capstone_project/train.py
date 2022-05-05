@@ -7,23 +7,24 @@ import click
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score, make_scorer, roc_auc_score
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_validate, KFold
 from .data import get_data
 from .pipeline import preprocess
 
 @click.command()
-@click.option('--model', default = 'Decision Tree', help = 'Two model can be trained: "Decision Tree" and "Logistic Regression"')
+@click.option('--model', default = 'Decision Tree', help = 'Three model can be trained: "Decision Tree", "Logistic Regression", "Random Forest"')
 @click.option('--max_depth', default = 5, help = 'Tree maximum depth for decision tree')
 @click.option('--penalty', default = 'l2', help = 'Penalty for logistic regression, can be "l1", "l2", "none"')
 @click.option('--max_iter', default = 1000, help = 'Maximum number of iterations for logistic regression')
 @click.option('--regularization', default = 3, help = 'Inverse of regularization strength for logistic regression')
+@click.option('--n_estimators', default = 50, help = 'Number of trees in random forest')
 @click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
 @click.option('--kf_n', default = 5, help = 'Number of folds for cross-validation')
 @click.option('--average', default = 'macro')
 @click.option('--random_state', default = 42, help = 'Random state')
-def train(model, max_depth, penalty, max_iter, regularization, dataset_path, kf_n, average, random_state):
+def train(model, max_depth, penalty, max_iter, regularization, n_estimators, dataset_path, kf_n, average, random_state):
 
     X, y = get_data(dataset_path)
 
@@ -41,6 +42,9 @@ def train(model, max_depth, penalty, max_iter, regularization, dataset_path, kf_
         elif model == 'Logistic Regression':
             model_params = {'penalty': penalty, 'max_iter': max_iter, 'C': regularization, 'random_state': random_state}
             train_model = LogisticRegression().set_params(**model_params)
+        elif model == 'Random Forest':
+            model_params = {'n_estimators': n_estimators, 'random_state': random_state}
+            train_model = RandomForestClassifier().set_params(**model_params) 
 
         result = cross_validate(train_model, X_prep, y, scoring = scoring, cv = kf)
 
