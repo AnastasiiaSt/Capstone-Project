@@ -1,16 +1,22 @@
+import os
 from pathlib import Path
 from joblib import dump
 import mlflow
 import mlflow.sklearn
 import click
+import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score, make_scorer
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import KFold
 from .data import get_data
+from .pipeline import preprocess
 
 def evaluation_metrics(actual, pred):
-    acc = accuracy_score(actual, pred)
-    f1 = f1_score(actual, pred, average = 'weighted')
-    return acc, f1
+    precision = precision_score(actual, pred, average = 'macro')
+    recall = recall_score(actual, pred, average = 'macro')
+    f1 = f1_score(actual, pred, average = 'macro')
+    return precision, recall, f1
 
 print('See path: ', Path)
 max_depth = 5
@@ -18,22 +24,32 @@ max_depth = 5
 
 @click.command()
 @click.option('--max_depth', default = 5, help = 'Tree maximum depth')
-@click.option('--dataset_path', default = r'C:\Users\anast\Documents\GitHub\Capstone-Project\data', type = click.Path(exists = True, dir_okay = False, path_type = Path))
-def train(dataset_path, max_depth):
+@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
+@click.option('--kf_n', default = 5, help = 'Number of KFolds for cross-validation')
+@click.option('--average', default = 'macro')
+@click.option('--random_state', default = 42, help = 'Random state')
+def train(dataset_path, max_depth, kf_n, average, random_state):
 
-    train_X, train_y, test_X = get_data(dataset_path)
+    X, y = get_data(dataset_path)
 
-    with mlflow.start_run(experiment_id = 3):
-        model = DecisionTreeClassifier(random_state = 42, max_depth = max_depth)
-        model.fit(train_X, train_y)
-        (acc, f1) =  evaluation_metrics(train_y, model.predict(train_X))
+    X_prep = preprocess(X)
 
-        click.echo('Accuracy: {0}. \nF1 score: {1}.'.format(acc, f1))
+    with mlflow.start_run():
 
-        mlflow.log_param('max_depth', max_depth)
-        mlflow.log_metric('accuracy', acc)
-        mlflow.log_metric('f1_score', f1)
-        mlflow.sklearn.log_model(model, 'model')
-        print('Max_depth:', max_depth)
+        kf = KFold(n_splits = kf_n, random_state = random_state, shuffle = True)
+
+        scoring = {'Precision': 'precision_macro', 'Recall': 'recall_macro', 'F1_score': make_scorer(f1_score, average = average)}
+
+        model = DecisionTreeClassifier(max_depth = max_depth, random_state = random_state)
+        result = cross_validate(model, X_prep, y, scoring = scoring, cv = kf)
+
+        mlflow.log_param('KFolds number', kf_n)
+        mlflow.log_param('Max_depth', max_depth)
+        mlflow.log_param('Average', average)
+        for metric in scoring.items():
+            mlflow.log_metric(metric[0], np.mean(result['test_' + metric[0]]))
+            click.echo('{0} is {1}.'.format(metric[0], np.mean(result['test_' + metric[0]])))
+
+        mlflow.sklearn.log_model(model, 'Decision Tree')
 
 
