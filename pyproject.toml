@@ -23,6 +23,7 @@ mypy = "^0.950"
 [tool.poetry.scripts]
 train = "src.capstone_project.train:train"
 report = "src.capstone_project.data:profile_report"
+tune = "src.capstone_project.tune:tune"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
