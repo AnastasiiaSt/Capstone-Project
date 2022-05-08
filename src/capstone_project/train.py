@@ -14,23 +14,30 @@ from .data import get_data
 from .pipeline import preprocess
 
 @click.command()
-@click.option('--model', default = 'Decision Tree', help = 'Three model can be trained: "Decision Tree", "Logistic Regression", "Random Forest"')
-@click.option('--max_depth', default = 5, help = 'Tree maximum depth for decision tree')
+@click.option('--model', type = click.Choice(['Decision Tree', 'Logistic Regression', 'Random Forest'], case_sensitive = False), help = 'The model to be trained')
+@click.option('--scaling', default = False, help = 'Numeric features scaling')
+@click.option('--variance_threshold', default = False, help = 'Variance threshold feature selection')
+@click.option('--threshold', default = 0.0, help = 'Threshold for variance threshold feature selection')
+@click.option('--pca', default = False, help = 'PCA dimensionality reduction')
+@click.option('--n_components', default = 2, help = 'Number of  components for PCA dimensionality reduction')
+@click.option('--kf_n', default = 5, help = 'Number of folds for cross-validation')
+@click.option('--max_depth', default = 10, help = 'Tree maximum depth for decision tree')
 @click.option('--penalty', default = 'l2', help = 'Penalty for logistic regression, can be "l1", "l2", "none"')
 @click.option('--max_iter', default = 1000, help = 'Maximum number of iterations for logistic regression')
 @click.option('--regularization', default = 3, help = 'Inverse of regularization strength for logistic regression')
 @click.option('--n_estimators', default = 50, help = 'Number of trees in random forest')
+@click.option('--save_model_path', default = os.path.join(Path.cwd(), 'data/model.joblib'))
 @click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
-@click.option('--kf_n', default = 5, help = 'Number of folds for cross-validation')
 @click.option('--average', default = 'macro')
 @click.option('--random_state', default = 42, help = 'Random state')
-def train(model, max_depth, penalty, max_iter, regularization, n_estimators, dataset_path, kf_n, average, random_state):
+
+def train(model: str, save_model_path: Path, variance_threshold: bool, threshold: bool, scaling: bool, pca: bool, n_components: int, max_depth, penalty: str, max_iter: int, regularization: float, n_estimators: int, dataset_path: Path, kf_n: int, average: str, random_state: int) -> None:
 
     X, y = get_data(dataset_path)
 
-    X_prep = preprocess(X)
+    X_prep, params_prep = preprocess(X, variance_threshold = variance_threshold, threshold = threshold, scaling = scaling, pca = pca, n_components = n_components)
 
-    with mlflow.start_run(experiment_id = 7):
+    with mlflow.start_run(run_name = model):
 
         kf = KFold(n_splits = kf_n, random_state = random_state, shuffle = True)
 
@@ -43,15 +50,17 @@ def train(model, max_depth, penalty, max_iter, regularization, n_estimators, dat
             model_params = {'penalty': penalty, 'max_iter': max_iter, 'C': regularization, 'random_state': random_state}
             train_model = LogisticRegression().set_params(**model_params)
         elif model == 'Random Forest':
-            model_params = {'n_estimators': n_estimators, 'random_state': random_state}
+            model_params = {'n_estimators': n_estimators, 'max_depth': max_depth, 'random_state': random_state}
             train_model = RandomForestClassifier().set_params(**model_params) 
 
         result = cross_validate(train_model, X_prep, y, scoring = scoring, cv = kf)
 
-        params = model_params
+        params = {**params_prep, **model_params}
+
+        params['kf_n'] = kf_n
 
         for param in params.items():
-            click.echo('Parameter {0}.'.format(param))
+            click.echo('parameter {0} is {1}.'.format(param[0], param[1]))
             mlflow.log_param(param[0], param[1])
 
         for metric in scoring.items():
@@ -59,5 +68,6 @@ def train(model, max_depth, penalty, max_iter, regularization, n_estimators, dat
             click.echo('{0} is {1}.'.format(metric[0], np.mean(result['test_' + metric[0]])))
 
         mlflow.sklearn.log_model(train_model, model)
+        dump(train_model, save_model_path)
 
 
