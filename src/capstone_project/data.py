@@ -2,11 +2,12 @@ import pandas as pd
 from pandas_profiling import ProfileReport
 import os
 from pathlib import Path
+from typing import Tuple
 import click
 
 # Read the datasets from the files
 
-def get_data(path, file_name = 'train.csv'):
+def get_data(path: Path, file_name = 'train.csv') -> Tuple[pd.DataFrame, pd.Series]:
     file_path = os.path.join(path, file_name)
     dataset = pd.read_csv(file_path)
 
@@ -21,8 +22,8 @@ def get_data(path, file_name = 'train.csv'):
 @click.command()
 @click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
 @click.option('--file_name', default = 'train.csv')
-@click.option('--path_to', default = Path.cwd())
-def profile_report(dataset_path, file_name, path_to):
+@click.option('--path_to', default = os.path.join(Path.cwd(), 'data'))
+def profile_report(dataset_path: Path, file_name: str, path_to: Path) -> None:
     file_path = os.path.join(dataset_path, file_name)
     dataset = pd.read_csv(file_path)  
     report = ProfileReport(dataset)
