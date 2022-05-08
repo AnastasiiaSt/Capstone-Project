@@ -1,3 +1,5 @@
 data/
 mlruns/
 src/capstone_project/__pycache__
+Experiment_results_training
+Experiment_results_tuning
