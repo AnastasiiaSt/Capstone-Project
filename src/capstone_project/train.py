@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from joblib import dump
+import joblib
 import mlflow
 import mlflow.sklearn
 import click
@@ -14,7 +14,7 @@ from .data import get_data
 from .pipeline import preprocess
 
 @click.command()
-@click.option('--model', type = click.Choice(['Decision Tree', 'Logistic Regression', 'Random Forest'], case_sensitive = False), help = 'The model to be trained')
+@click.option('--model', default = 'Decision Tree', type = click.Choice(['Decision Tree', 'Logistic Regression', 'Random Forest'], case_sensitive = False), help = 'The model to be trained')
 @click.option('--scaling', default = False, help = 'Numeric features scaling')
 @click.option('--variance_threshold', default = False, help = 'Variance threshold feature selection')
 @click.option('--threshold', default = 0.0, help = 'Threshold for variance threshold feature selection')
@@ -26,8 +26,8 @@ from .pipeline import preprocess
 @click.option('--max_iter', default = 1000, help = 'Maximum number of iterations for logistic regression')
 @click.option('--regularization', default = 3, help = 'Inverse of regularization strength for logistic regression')
 @click.option('--n_estimators', default = 50, help = 'Number of trees in random forest')
-@click.option('--save_model_path', default = os.path.join(Path.cwd(), 'data/model.joblib'))
-@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
+@click.option('--save_model_path', default = os.path.join(Path.cwd(), 'data', 'model.joblib'))
+@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data', 'train.csv'))
 @click.option('--average', default = 'macro')
 @click.option('--random_state', default = 42, help = 'Random state')
 
@@ -60,7 +60,6 @@ def train(model: str, save_model_path: Path, variance_threshold: bool, threshold
         params['kf_n'] = kf_n
 
         for param in params.items():
-            click.echo('parameter {0} is {1}.'.format(param[0], param[1]))
             mlflow.log_param(param[0], param[1])
 
         for metric in scoring.items():
@@ -68,6 +67,6 @@ def train(model: str, save_model_path: Path, variance_threshold: bool, threshold
             click.echo('{0} is {1}.'.format(metric[0], np.mean(result['test_' + metric[0]])))
 
         mlflow.sklearn.log_model(train_model, model)
-        dump(train_model, save_model_path)
+        joblib.dump(train_model, save_model_path)
 
 
