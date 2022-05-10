@@ -2,7 +2,6 @@ import pytest
 from click.testing import CliRunner
 import os
 from pathlib import Path
-import pandas as pd
 from capstone_project.train import train
 from capstone_project.data import get_data
 
@@ -25,11 +24,13 @@ def test_pca_components(input_path):
     runner = CliRunner()
     with runner.isolated_filesystem():
         result = runner.invoke(
-            train, ["--dataset_path", input_path, "--pca", True, "--n_components", 100]
+            train, ["--dataset_path", input_path, "--pca",
+                    True, "--n_components", 100]
         )
         assert (
             result.exit_code == 1
-        ), "The value of pca components should be between 0 and number of features in dataset."
+        ), "Number of PCA components should be between 0 and \
+            the number of features in dataset."
 
 
 def test_variance_threshold(input_path):

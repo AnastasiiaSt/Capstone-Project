@@ -76,4 +76,5 @@ def test_train(input_path, output_path, input_features, input_labels):
         assert forest_score >= 0.5
         assert (
             forest_score >= tree_score
-        ), "Random forest score is expected to be higher than Decision tree score."
+        ), "Random forest score is expected to be higher than \
+            Decision tree score."
