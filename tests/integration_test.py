@@ -29,7 +29,7 @@ def output_path():
 def test_train(input_path, output_path, input_features, input_labels):
     runner = CliRunner()
     with runner.isolated_filesystem():
-        
+
         tree = runner.invoke(train, ['--dataset_path', input_path, '--save_model_path', output_path, '--model', 'Decision Tree'])
         assert tree.exit_code == 0
         loaded_tree = joblib.load(output_path)
@@ -44,7 +44,8 @@ def test_train(input_path, output_path, input_features, input_labels):
         loaded_forest = joblib.load(output_path)
         loaded_forest.fit(input_features, input_labels)
         forest_score = loaded_tree.score(input_features, input_labels)
-        assert forest_score >=  tree_score, 'Random forest score is expected to be higher than Decision tree score.'
+        assert forest_score >= 0.5
+        assert forest_score >= tree_score, 'Random forest score is expected to be higher than Decision tree score.'
 
 
 
