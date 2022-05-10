@@ -13,7 +13,7 @@ from sklearn.model_selection import cross_validate, KFold, GridSearchCV
 from .data import get_data
 from .pipeline import preprocess
 
-def eval_metric(true, pred, average: str):
+def eval_metric(true, pred, average: str = 'macro'):
     precision = precision_score(true, pred, average = average)
     recall = recall_score(true, pred, average = average)
     f1_score = f1(true, pred, average = average)
@@ -65,11 +65,11 @@ class StringList(click.Option):
 @click.option('--n_estimators', cls=IntList, default = [], help = 'Number of trees in random forest')
 
 @click.option('--save_model_path', default = os.path.join(Path.cwd(), 'data/model.joblib'))
-@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
+@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data', 'train.csv'))
 @click.option('--average', default = 'macro')
 @click.option('--random_state', default = 42, help = 'Random state')
 
-def tune(model: str, save_model_path: Path, variance_threshold: bool, threshold: bool, scaling: bool, pca: bool, n_components: list, max_depth: list, penalty: list, max_iter: list, regularization: list, n_estimators: list, dataset_path: Path, kf_n_inner: int, kf_n_outer: int, average: str, random_state: int) -> None:
+def tune(model: str, save_model_path: Path, variance_threshold: bool, threshold: bool, scaling: bool, pca: bool, n_components: list, max_depth: list, max_iter: list, regularization: list, n_estimators: list, dataset_path: Path, kf_n_inner: int, kf_n_outer: int, average: str, random_state: int) -> None:
 
     X, y = get_data(dataset_path)
 
