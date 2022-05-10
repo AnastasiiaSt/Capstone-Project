@@ -96,7 +96,7 @@ def train(
     model: str,
     save_model_path: Path,
     variance_threshold: bool,
-    threshold: bool,
+    threshold: float,
     scaling: bool,
     pca: bool,
     n_components: int,

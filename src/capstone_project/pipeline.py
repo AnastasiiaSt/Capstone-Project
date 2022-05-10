@@ -6,6 +6,9 @@ from sklearn.feature_selection import VarianceThreshold
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from typing import Tuple
+from typing import Union
+from typing import Dict
+from typing import Any
 
 
 # Create preprocessing pipeline
@@ -14,7 +17,7 @@ from typing import Tuple
 def preprocess(
     dataset: pd.DataFrame,
     variance_threshold: bool,
-    threshold: int,
+    threshold: float,
     scaling: bool,
     pca: bool,
     n_components: int,
@@ -35,13 +38,13 @@ def preprocess(
         num_pipeline_steps.append(
             ("variance_threshold", VarianceThreshold(threshold=threshold))
         )
-        params_prep["variance_threshold"] = True
         params_prep["threshold"] = threshold
+        params_prep["variance_threshold"] = True
 
     if pca:
         num_pipeline_steps.append(("pca", PCA(n_components=n_components)))
-        params_prep["pca"] = True
         params_prep["n_components"] = n_components
+        params_prep["pca"] = True
 
     if scaling:
         num_pipeline_steps.append(("scaling", StandardScaler()))

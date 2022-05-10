@@ -13,9 +13,10 @@ from sklearn.metrics import f1_score as f1
 from sklearn.model_selection import KFold, GridSearchCV
 from .data import get_data
 from .pipeline import preprocess
+from typing import Tuple
 
 
-def eval_metric(true, pred, average: str = "macro"):
+def eval_metric(true, pred, average: str = "macro") -> Tuple[float, float, float]:
     precision = precision_score(true, pred, average=average)
     recall = recall_score(true, pred, average=average)
     f1_score = f1(true, pred, average=average)
@@ -23,7 +24,7 @@ def eval_metric(true, pred, average: str = "macro"):
 
 
 class IntList(click.Option):
-    def type_cast_value(self, ctx, value) -> list():
+    def type_cast_value(self, ctx, value) -> list[int]:
         if value:
             value = str(value)
             list_as_str = value.lstrip("[").rstrip("]")
@@ -34,7 +35,7 @@ class IntList(click.Option):
 
 
 class FloatList(click.Option):
-    def type_cast_value(self, ctx, value) -> list():
+    def type_cast_value(self, ctx, value) -> list[float]:
         if value:
             value = str(value)
             list_as_str = value.lstrip("[").rstrip("]")
@@ -45,7 +46,7 @@ class FloatList(click.Option):
 
 
 class StringList(click.Option):
-    def type_cast_value(self, ctx, value) -> list():
+    def type_cast_value(self, ctx, value) -> list[str]:
         if value:
             value = str(value)
             list_as_str = value.lstrip("[").rstrip("]")
@@ -143,10 +144,10 @@ def tune(
     model: str,
     save_model_path: Path,
     variance_threshold: bool,
-    threshold: bool,
+    threshold: float,
     scaling: bool,
     pca: bool,
-    n_components: list,
+    n_components: int,
     max_depth: list,
     max_iter: list,
     regularization: list,
@@ -243,7 +244,7 @@ def tune(
 
     with mlflow.start_run(experiment_id=1, run_name=model + "_outer result"):
 
-        score_sums = {"avg_precision": 0, "avg_recall": 0, "avg_f1_score": 0}
+        score_sums = {"avg_precision": 0.0, "avg_recall": 0.0, "avg_f1_score": 0.0}
         max_score = []
         for scores in outer_scores:
             score_sums["avg_precision"] += scores[0]
@@ -251,10 +252,10 @@ def tune(
             score_sums["avg_f1_score"] += scores[2]
             max_score.append(scores[2])
 
-        for score_sums in score_sums.items():
-            mlflow.log_metric(score_sums[0], score_sums[1] / kf_n_outer)
-            click.echo("{0} is {1}.".format(score_sums[0],
-                                            score_sums[1] / kf_n_outer))
+        for score_sum in score_sums.items():
+            mlflow.log_metric(score_sum[0], score_sum[1] / kf_n_outer)
+            click.echo("{0} is {1}.".format(score_sum[0],
+                                            score_sum[1] / kf_n_outer))
 
         best_model = outer_models[np.argmax(max_score)]
         mlflow.sklearn.log_model(best_model, model)
