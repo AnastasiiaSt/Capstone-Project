@@ -7,28 +7,27 @@ import click
 
 # Read the datasets from the files
 
+
 def get_data(path: Path) -> Tuple[pd.DataFrame, pd.Series]:
     dataset = pd.read_csv(path)
 
-    click.echo('Dataset size: {0}.'.format(dataset.shape))
+    click.echo("Dataset size: {0}.".format(dataset.shape))
 
-    y = dataset['Cover_Type']
-    X = dataset.drop(['Cover_Type'], axis = 1)
+    y = dataset["Cover_Type"]
+    X = dataset.drop(["Cover_Type"], axis=1)
     return X, y
+
 
 # Perform EDA using pandas profiling library
 
+
 @click.command()
-@click.option('--dataset_path', default = os.path.join(Path.cwd(), 'data'))
-@click.option('--file_name', default = 'train.csv')
-@click.option('--path_to', default = os.path.join(Path.cwd(), 'data'))
+@click.option("--dataset_path", default=os.path.join(Path.cwd(), "data"))
+@click.option("--file_name", default="train.csv")
+@click.option("--path_to", default=os.path.join(Path.cwd(), "data"))
 def profile_report(dataset_path: Path, file_name: str, path_to: Path) -> None:
     file_path = os.path.join(dataset_path, file_name)
-    dataset = pd.read_csv(file_path)  
+    dataset = pd.read_csv(file_path)
     report = ProfileReport(dataset)
-    path = os.path.join(path_to, 'profile_report.html')
+    path = os.path.join(path_to, "profile_report.html")
     report.to_file(path)
-
-
-
-
