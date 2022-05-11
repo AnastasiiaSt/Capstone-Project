@@ -53,7 +53,7 @@ from .pipeline import preprocess
 )
 @click.option(
     "--regularization",
-    default=3,
+    default=3.0,
     help="Inverse of regularization strength \
          for logistic regression",
 )
