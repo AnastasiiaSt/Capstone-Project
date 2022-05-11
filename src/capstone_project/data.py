@@ -24,7 +24,7 @@ def get_data(path: Path) -> Tuple[pd.DataFrame, pd.Series]:
 @click.command()
 @click.option("--dataset_path", default=os.path.join(Path.cwd(), "data"))
 @click.option("--file_name", default="train.csv")
-@click.option("--path_to", default=os.path.join(Path.cwd(), "data"))
+@click.option("--path_to", default=Path.cwd())
 def profile_report(dataset_path: Path, file_name: str, path_to: Path) -> None:
     file_path = os.path.join(dataset_path, file_name)
     dataset = pd.read_csv(file_path)
