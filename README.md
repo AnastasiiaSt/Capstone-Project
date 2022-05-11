@@ -14,19 +14,23 @@ poetry install --no-dev
 ```sh
 poetry run report
 ```
-As a result html file with the report will be created in the */data* directory.<br>
-6. Run train with the following command:
+As a result, html file with the report will be created in the */data* directory.<br>
+6. Model can be trained with the following command:
 ```sh
 poetry run train 
+```
+Default model is Decision Tree with maximum depth = 10. You can select model and define hyperparameters in the CLI. To get a full list of them, use *--help*:
+```sh
 poetry run train --help
 ```
-Default model is Decision Tree witn maximum depth = 10. You can select model and define hyperparameters in the CLI. To get a full list of them, use *--help*.<br>
 7. To determine the optimum parameters for a model, the following command can be used:
 ```sh
 poetry tune --model="Decision Tree" --max_depth=[10,20,30,40]
+```
+The command requires selection of the model of interest and lists of hyperparameters to tune. To get a full list of tunable models and hyperparameters use *--help*:
+```sh
 poetry --help
 ```
-The command requires selection of the model of interest and lists of hyperparameters to tune. To get a full list of tunable models and hyperparameters use *--help*.<br>
 8. Run MLflow UI to see the information about experiments you conducted:
 ```sh
 poetry run mlflow ui
