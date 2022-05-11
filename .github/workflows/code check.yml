@@ -1,7 +1,5 @@
 name: code check
 
-name: test
-
 on: push
 
 jobs:
