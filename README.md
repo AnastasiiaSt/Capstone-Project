@@ -1,7 +1,7 @@
 ## Description
 This is the Capstone Project of Machine Learning Course at RS School.<br>
 The goal is to implement ML project comprasing of model training, selection and evaluation for prediction of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project.
-<img src="Experiment_results_training.jpg">
+<img src="./screens/Experiment_results_training.jpg">
 
 ## Usage
 1. Clone this repository to your machine.<br>
