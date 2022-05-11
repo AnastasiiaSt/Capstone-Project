@@ -3,3 +3,5 @@ mlruns/
 src/capstone_project/__pycache__
 tests/fixtures/extract
 tests/fixtures/extract
+tests/__pycache__
+test_modl.joblib
