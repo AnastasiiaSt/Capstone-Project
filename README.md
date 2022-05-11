@@ -10,6 +10,8 @@ Automatic hyperparameters tuning by means of GridSearchCV was implemented to det
 
 Unit and integration tests were implemented to check code corectness. All functions were type annotated. Code formatting were edited using Black and checked using Flake8. The results of the testing and linting is shown on the picture below:
 <img src="./images/nox.png" width="900">
+
+Information aboat training set can be found in the following [report](https://github.com/AnastasiiaSt/Capstone-Project/blob/main/profile_report.html), which was created using pandas profiling module.
 ## Usage
 1. Clone this repository to your machine.<br>
 2. Download [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) dataset, save csv locally (default path is *data/train.csv* in repository's root).<br>
@@ -41,7 +43,7 @@ poetry run tune --model="Random Forest" --max_depth=[10,20,30,40] --n_estimators
 ```
 The command requires selection of the model of interest and lists of hyperparameters to tune. To get a full list of tunable models and hyperparameters use *--help*:
 ```sh
-poetry --help
+poetry run tune --help
 ```
 8. Run MLflow UI to see the information about conducted experiments:
 ```sh
@@ -68,3 +70,4 @@ Alternatively, to run all sessions of testing and formatting the following comma
 ```sh
 nox
 ```
+<br>
