@@ -217,7 +217,7 @@ def tune(
             score_sums["avg_f1_score"] += scores[2]
             max_score.append(scores[2])
 
-        click.echo('Final metrics are:')
+        click.echo("Final metrics are:")
         for score_sum in score_sums.items():
             mlflow.log_metric(score_sum[0], score_sum[1] / kf_n_outer)
             click.echo("{0} is {1}.".format(score_sum[0], score_sum[1] / kf_n_outer))
@@ -228,7 +228,7 @@ def tune(
 
         best_params = outer_params[np.argmax(max_score)]
 
-        click.echo('Best model parameters are:')
+        click.echo("Best model parameters are:")
         for param in params.items():
             click.echo("parameter {0} is {1}.".format(param[0], param[1]))
             mlflow.log_param(param[0], param[1])
