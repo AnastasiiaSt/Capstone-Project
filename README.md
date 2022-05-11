@@ -1,6 +1,6 @@
 ## Description
 This is the Capstone Project of Machine Learning Course at RS School.<br>
-The goal is to implement ML project comprasing of model training, selection and evaluation for classification of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project.<br> Detailed information about training set can be found in the following [report](http://htmlpreview.github.io/?https://github.com/AnastasiiaSt/Capstone-Project/blob/main/profile_report.html), which was created using pandas profiling module.
+The goal of the project is to implement ML project comprasing of model training, selection and evaluation for classification of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project. Detailed information about training set can be found in the following [report](http://htmlpreview.github.io/?https://github.com/AnastasiiaSt/Capstone-Project/blob/main/profile_report.html), which was created using pandas profiling module.
 
 ### Model training
 Three models with different hyperparameters were trained to predict the class of forest cover type. K-fold cross validation was employed to split the data into training and validation sets. For evaluation of the classifier, three metrics - precision, recall and f1 score were used. The results are summaries in the picture below:
@@ -11,7 +11,7 @@ Automatic hyperparameters tuning by means of GridSearchCV was implemented to det
 <img src="./images/Experiment_results_tuning.png" width="900">
 
 ### Code testing and formatting
-Unit and integration tests were implemented to check code corectness. All functions were type annotated. Code formatting were edited using Black and checked using Flake8. The results of the testing and linting is shown on the picture below:
+Unit and integration tests were implemented to check code corectness. All functions were type annotated. Code formatting were edited using Black and checked using Flake8. The results of code testing and linting is shown on the picture below:
 <img src="./images/nox.png" width="900">
 
 ## Usage
@@ -22,16 +22,15 @@ Unit and integration tests were implemented to check code corectness. All functi
 ```sh
 poetry install --no-dev
 ```
-5. Pandas profiling report for training data can be created using the following command:
+5. Pandas profiling report for training data can be created using the following command (default path is repository's root):
 ```sh
 poetry run report
 ```
-As a result, html file with the report will be created in repository's root.<br>
 6. Model can be trained with the following command:
 ```sh
 poetry run train 
 ```
-Default model is Decision Tree with maximum depth = 10. You can select model and define hyperparameters in the CLI. For instance:
+Default model is Decision Tree with maximum depth of 10. You can select model and define hyperparameters in the CLI. For instance:
 ```sh
 poetry run train --model="Logistic Regression" --regularization=2.5 --max_iter=1000 --scaling=True
 ```
