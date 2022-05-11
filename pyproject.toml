@@ -36,3 +36,6 @@ filterwarnings = [
     "ignore::UserWarning",
     "ignore::DeprecationWarning",
 ]
+
+[tool.flake8]
+max-line-length = 88
