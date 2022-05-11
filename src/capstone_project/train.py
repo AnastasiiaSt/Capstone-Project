@@ -132,6 +132,7 @@ def train(
         for param in params.items():
             mlflow.log_param(param[0], param[1])
 
+        click.echo("Metrics are:")
         for metric in scoring.items():
             mlflow.log_metric(metric[0], np.mean(result["test_" + metric[0]]))
             click.echo(
