@@ -5,4 +5,8 @@ tests/fixtures/extract
 tests/fixtures/extract
 tests/__pycache__
 tests/test_model.joblib
+<<<<<<< Updated upstream
 __pycache__
+=======
+__pycache__
+>>>>>>> Stashed changes
