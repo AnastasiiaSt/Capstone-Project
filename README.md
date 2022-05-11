@@ -1,10 +1,13 @@
 ## Description
 This is the Capstone Project of Machine Learning Course at RS School.<br>
-The goal is to implement ML project comprasing of model training, selection and evaluation for prediction of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project.
-<img src="./images/Experiment_results_training.png" width="700">
+The goal is to implement ML project comprasing of model training, selection and evaluation for prediction of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project.<br>
 
-<img src="./images/Experiment_results_tuning.png" width="700">
-
+Three models with different hyperparameters were trained to predict the class of forest cover type. K-fold cross validation was used to split the data into training and validation sets. For evaluation of the classifier, three metrics - precision, recall and f1 score were used. The results are summaries in the picture below:
+<img src="./images/Experiment_results_training.png" width="900">
+Hyperparameters tuning was implemented to determine best hyperparameters and best scores for the three machine learning models. Nested cross validation was used to select and evaluate the models. F1 score was used as optimization metric for hyperparameters selection. For evaluation of the classifier, three metrics - precision, recall and f1 score were used. The results are presented in the picture below:
+<img src="./images/Experiment_results_tuning.png" width="900">
+Unit and integration tests were implemented to check code performance. All functions were type annotated. Code formatting were edited using Black and checked using Flake8. The results of the testing and linting is shown below:
+<img src="./images/nox.png" width="900">
 ## Usage
 1. Clone this repository to your machine.<br>
 2. Download [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) dataset, save csv locally (default path is *data/train.csv* in repository's root).<br>
