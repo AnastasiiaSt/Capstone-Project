@@ -12,7 +12,7 @@ def input_path() -> str:
     return path
 
 
-def test_get_data(input_path: str) -> None:
+def test_get_data(input_path: Path) -> None:
     X, y = get_data(path=input_path)
     assert X.shape[0] > 1, "Size of the dataset is insufficient."
     assert (
