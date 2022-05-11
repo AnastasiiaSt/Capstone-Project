@@ -60,11 +60,11 @@ poetry run pytest
 ```
 11. To format and check code lining and type annotation the following three commands can be used:
 ```sh
-black .
-flake8 --max_line_length=88
-mypy .
+poetry run black .
+poetry flake8 --max-line-length=88
+poetry run mypy .
 ```
 12. Alternatively, to run all sessions of testing and formatting the following command can be used:
 ```sh
-nox
+poetry run nox
 ```
