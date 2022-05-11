@@ -207,7 +207,7 @@ def tune(
             mlflow.log_metric("recall", recall)
             mlflow.log_metric("f1_score", f1_score)
 
-    with mlflow.start_run(experiment_id=1, run_name=model + "_outer result"):
+    with mlflow.start_run(run_name=model + "_outer result"):
 
         score_sums = {"avg_precision": 0.0, "avg_recall": 0.0, "avg_f1_score": 0.0}
         max_score = []
