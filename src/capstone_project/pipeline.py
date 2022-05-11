@@ -6,9 +6,6 @@ from sklearn.feature_selection import VarianceThreshold
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from typing import Tuple
-from typing import Union
-from typing import Dict
-from typing import Any
 
 
 # Create preprocessing pipeline
