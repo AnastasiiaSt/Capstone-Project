@@ -17,4 +17,3 @@ jobs:
       - run: |
           flake8 . --max-line-length 88
           black . --check
-          pytest
