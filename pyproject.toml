@@ -20,6 +20,7 @@ black = "^22.3.0"
 pytest = "^7.1.2"
 flake8 = "^4.0.1"
 mypy = "^0.950"
+nox = "^2022.1.7"
 
 [tool.poetry.scripts]
 train = "src.capstone_project.train:train"
