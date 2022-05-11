@@ -1,6 +1,6 @@
 ## Description
 This is the Capstone Project of Machine Learning Course at RS School.<br>
-The goal of the project is to implement ML project comprasing of model training, selection and evaluation for classification of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project. Detailed information about training set can be found in the following [report](http://htmlpreview.github.io/?https://github.com/AnastasiiaSt/Capstone-Project/blob/main/profile_report.html), which was created using pandas profiling module.
+The goal of the project is to implement ML project comprasing of model training, selection and evaluation for classification of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project. Detailed information about training set can be found in the following [report](http://htmlpreview.github.io/?profile_report.html), which was created using pandas profiling module.
 
 ### Model training
 Three models with different hyperparameters were trained to predict the class of forest cover type. K-fold cross validation was employed to split the data into training and validation sets. For evaluation of the classifier, three metrics - precision, recall and f1 score were used. The results are summaries in the picture below:
