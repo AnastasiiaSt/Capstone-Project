@@ -24,8 +24,8 @@ def test_pca_components(input_path: str) -> None:
     runner = CliRunner()
     with runner.isolated_filesystem():
         result = runner.invoke(
-            train, ["--dataset_path", input_path, "--pca",
-                    "True", "--n_components", "100"]
+            train,
+            ["--dataset_path", input_path, "--pca", "True", "--n_components", "100"],
         )
         assert (
             result.exit_code == 1

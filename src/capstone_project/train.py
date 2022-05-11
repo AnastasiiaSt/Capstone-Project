@@ -19,45 +19,28 @@ from .pipeline import preprocess
     "--model",
     default="Decision Tree",
     type=click.Choice(
-        ["Decision Tree", "Logistic Regression", "Random Forest"],
-        case_sensitive=False
+        ["Decision Tree", "Logistic Regression", "Random Forest"], case_sensitive=False
     ),
     help="The model to be trained",
 )
+@click.option("--scaling", default=False, help="Numeric features scaling")
 @click.option(
-    "--scaling",
-    default=False,
-    help="Numeric features scaling")
-@click.option(
-    "--variance_threshold",
-    default=False,
-    help="Variance threshold feature selection"
+    "--variance_threshold", default=False, help="Variance threshold feature selection"
 )
 @click.option(
     "--threshold",
     default=0.0,
     help="Threshold for variance threshold feature selection",
 )
-@click.option(
-    "--pca",
-    default=False,
-    help="PCA dimensionality reduction")
+@click.option("--pca", default=False, help="PCA dimensionality reduction")
 @click.option(
     "--n_components",
     default=2,
     help="Number of components for \
          PCA dimensionality reduction",
 )
-@click.option(
-    "--kf_n",
-    default=5,
-    help="Number of folds for cross-validation"
-)
-@click.option(
-    "--max_depth",
-    default=10,
-    help="Tree maximum depth for decision tree"
-)
+@click.option("--kf_n", default=5, help="Number of folds for cross-validation")
+@click.option("--max_depth", default=10, help="Tree maximum depth for decision tree")
 @click.option(
     "--penalty",
     default="l2",
@@ -74,23 +57,12 @@ from .pipeline import preprocess
     help="Inverse of regularization strength \
          for logistic regression",
 )
+@click.option("--n_estimators", default=50, help="Number of trees in random forest")
 @click.option(
-    "--n_estimators",
-    default=50,
-    help="Number of trees in random forest"
+    "--save_model_path", default=os.path.join(Path.cwd(), "data", "model.joblib")
 )
-@click.option(
-    "--save_model_path",
-    default=os.path.join(Path.cwd(), "data", "model.joblib")
-)
-@click.option(
-    "--dataset_path",
-    default=os.path.join(Path.cwd(), "data", "train.csv")
-)
-@click.option(
-    "--average",
-    default="macro"
-)
+@click.option("--dataset_path", default=os.path.join(Path.cwd(), "data", "train.csv"))
+@click.option("--average", default="macro")
 @click.option("--random_state", default=42, help="Random state")
 def train(
     model: str,
@@ -124,8 +96,7 @@ def train(
 
     with mlflow.start_run(run_name=model):
 
-        kf = KFold(n_splits=kf_n, random_state=random_state,
-                   shuffle=True)
+        kf = KFold(n_splits=kf_n, random_state=random_state, shuffle=True)
 
         scoring = {
             "precision": "precision_macro",
@@ -134,8 +105,7 @@ def train(
         }
 
         if model == "Decision Tree":
-            model_params = {"max_depth": max_depth,
-                            "random_state": random_state}
+            model_params = {"max_depth": max_depth, "random_state": random_state}
             train_model = DecisionTreeClassifier().set_params(**model_params)
         elif model == "Logistic Regression":
             model_params = {
@@ -165,8 +135,7 @@ def train(
         for metric in scoring.items():
             mlflow.log_metric(metric[0], np.mean(result["test_" + metric[0]]))
             click.echo(
-                "{0} is {1}.".format(metric[0],
-                                     np.mean(result["test_" + metric[0]]))
+                "{0} is {1}.".format(metric[0], np.mean(result["test_" + metric[0]]))
             )
 
         mlflow.sklearn.log_model(train_model, model)

@@ -60,51 +60,33 @@ class StringList(click.Option):
 @click.option(
     "--model",
     type=click.Choice(
-        ["Decision Tree", "Logistic Regression", "Random Forest"],
-        case_sensitive=False
+        ["Decision Tree", "Logistic Regression", "Random Forest"], case_sensitive=False
     ),
     help="The model to be trained",
 )
 @click.option(
-    "--kf_n_outer",
-    default=5,
-    help="Number of folds for outer loop of cross-validation"
+    "--kf_n_outer", default=5, help="Number of folds for outer loop of cross-validation"
 )
 @click.option(
-    "--kf_n_inner",
-    default=5,
-    help="Number of folds for inner loop of cross-validation"
+    "--kf_n_inner", default=5, help="Number of folds for inner loop of cross-validation"
 )
+@click.option("--scaling", default=False, help="Numeric features scaling")
 @click.option(
-    "--scaling",
-    default=False,
-    help="Numeric features scaling"
-)
-@click.option(
-    "--variance_threshold",
-    default=False,
-    help="Variance threshold feature selection"
+    "--variance_threshold", default=False, help="Variance threshold feature selection"
 )
 @click.option(
     "--threshold",
     default=0.0,
     help="Threshold for variance threshold feature selection",
 )
-@click.option(
-    "--pca",
-    default=False,
-    help="PCA dimensionality reduction"
-)
+@click.option("--pca", default=False, help="PCA dimensionality reduction")
 @click.option(
     "--n_components",
     default=2,
     help="Number of  components for PCA dimensionality reduction",
 )
 @click.option(
-    "--max_depth",
-    cls=IntList,
-    default=[],
-    help="Tree maximum depth for decision tree"
+    "--max_depth", cls=IntList, default=[], help="Tree maximum depth for decision tree"
 )
 @click.option(
     "--max_iter",
@@ -119,27 +101,14 @@ class StringList(click.Option):
     help="Inverse of regularization strength for logistic regression",
 )
 @click.option(
-    "--n_estimators",
-    cls=IntList,
-    default=[],
-    help="Number of trees in random forest"
+    "--n_estimators", cls=IntList, default=[], help="Number of trees in random forest"
 )
 @click.option(
-    "--save_model_path",
-    default=os.path.join(Path.cwd(), "data/model.joblib")
+    "--save_model_path", default=os.path.join(Path.cwd(), "data/model.joblib")
 )
-@click.option(
-    "--dataset_path",
-    default=os.path.join(Path.cwd(), "data", "train.csv"))
-@click.option(
-    "--average",
-    default="macro"
-)
-@click.option(
-    "--random_state",
-    default=42,
-    help="Random state"
-    )
+@click.option("--dataset_path", default=os.path.join(Path.cwd(), "data", "train.csv"))
+@click.option("--average", default="macro")
+@click.option("--random_state", default=42, help="Random state")
 def tune(
     model: str,
     save_model_path: Path,
@@ -191,16 +160,14 @@ def tune(
     elif model == "Random Forest":
         train_model = RandomForestClassifier(random_state=random_state)
 
-    cv_outer = KFold(n_splits=kf_n_outer, random_state=random_state,
-                     shuffle=True)
+    cv_outer = KFold(n_splits=kf_n_outer, random_state=random_state, shuffle=True)
 
     outer_scores = []
     outer_models = []
     outer_params = []
 
     for train_index, test_index in cv_outer.split(X_prep):
-        with mlflow.start_run(experiment_id=1,
-                              run_name=model + "_inner result"):
+        with mlflow.start_run(experiment_id=1, run_name=model + "_inner result"):
             X_train, X_test = X_prep[train_index, :], X_prep[test_index, :]
             y_train, y_test = y[train_index], y[test_index]
 
@@ -211,8 +178,7 @@ def tune(
             gs_metric = make_scorer(f1, average=average)
 
             gs = GridSearchCV(
-                train_model, model_params, scoring=gs_metric,
-                cv=cv_inner, refit=True
+                train_model, model_params, scoring=gs_metric, cv=cv_inner, refit=True
             )
             result = gs.fit(X_train, y_train)
 
@@ -221,8 +187,7 @@ def tune(
 
             y_pred = best_model.predict(X_test)
 
-            precision, recall, f1_score = eval_metric(y_test, y_pred,
-                                                      average=average)
+            precision, recall, f1_score = eval_metric(y_test, y_pred, average=average)
             outer_scores.append((precision, recall, f1_score))
 
             mlflow.sklearn.log_model(best_model, model)
@@ -254,8 +219,7 @@ def tune(
 
         for score_sum in score_sums.items():
             mlflow.log_metric(score_sum[0], score_sum[1] / kf_n_outer)
-            click.echo("{0} is {1}.".format(score_sum[0],
-                                            score_sum[1] / kf_n_outer))
+            click.echo("{0} is {1}.".format(score_sum[0], score_sum[1] / kf_n_outer))
 
         best_model = outer_models[np.argmax(max_score)]
         mlflow.sklearn.log_model(best_model, model)
