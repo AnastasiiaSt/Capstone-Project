@@ -1,4 +1,33 @@
-This is the Capstone Project of Machine Learning Couurse at RS School.
+## Description
+This is the Capstone Project of Machine Learning Course at RS School. \n 
+The goal is to implement ML project comprasing of model training, selection and evaluation for prediction of the forest cover type. The dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used in this project.
 
-In this project the dataset [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) from Kaggle is used.
-
+## Usage
+1. Clone this repository to your machine.\n
+2. Download [Forest Cover Type](https://www.kaggle.com/competitions/forest-cover-type-prediction/data) dataset, save csv locally (default path is *data/train.csv* in repository's root).\n
+3. Make sure Python 3.9 and Poetry are installed on your machine.\n
+4. Install the project dependencies with the following command:
+```sh
+poetry install --no-dev
+```
+5. Pandas profiling report for training data can be created using the following command:
+```sh
+poetry run report
+```
+As a result html file with the report will be created in the */data* directory.\n
+6. Run train with the following command:
+```sh
+poetry run train 
+poetry run train --help
+```
+Default model is Decision Tree witn maximum depth = 10. You can select model and define hyperparameters in the CLI. To get a full list of them, use *--help*.\n
+7. To determine the optimum parameters for a model, the following command can be used:
+```sh
+poetry tune --model="Decision Tree" --max_depth=[10,20,30,40]
+poetry --help
+```
+The command requires selection of the model of interest and lists of hyperparameters to tune. To get a full list of tunable models and hyperparameters use *--help*.\n
+8. Run MLflow UI to see the information about experiments you conducted:
+```sh
+poetry run mlflow ui
+```
